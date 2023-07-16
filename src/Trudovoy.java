@@ -1,2 +1,2 @@
-public class Trudovoy extends Muravei{ //todo
+public class Trudovoy extends Muravei{
 }
