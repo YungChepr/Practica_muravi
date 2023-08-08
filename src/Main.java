@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
         Panel1 gui = new Panel1();
+        gui.setap();
         gui.go();
     }
 }
@@ -14,10 +16,11 @@ public class Main {
         JButton buttonPlusMuravei;
         JButton buttonNachat;
         JButton buttonStop;
-        public void go() {
+        JFrame frame;
+        public void setap() {
         //СОЗДАЮТСЯ ВИЗУАЛЬНЫЕ КОМПОНЕНТЫ
             //Создаём фрейм и панели
-            JFrame frame = new JFrame();
+            frame = new JFrame();
             MyDrawPanel mypanel = new MyDrawPanel();
             //JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -32,14 +35,15 @@ public class Main {
             //Создаём кнопки
             buttonPlusEda = new JButton("+ ЕДА");
             buttonPlusMuravei = new JButton("+ МУРАВЕЙ");
-            buttonNachat = new JButton("НАЧАТЬ");
-            buttonStop = new JButton("СТОП");
+            buttonNachat = new JButton("СТАРТ");
+            buttonStop = new JButton("ПАУЗА");
 
             //Создаю обработчики событий для кнопок
             buttonPlusEda.addActionListener(this);
             buttonPlusMuravei.addActionListener(this);
             buttonNachat.addActionListener(this);
             buttonStop.addActionListener(this);
+            buttonStop.setEnabled(false);
 
             //Создаём тектовые поля
             JTextField textfield1 = new JTextField(3);
@@ -88,6 +92,34 @@ public class Main {
 
         //КОНЕЦ ЭВОЛЮЦИОННОГО ЦИКЛА
         }
+
+        public void go(){
+            //Указатель для доступа к полю, ПОЛЕ это SINGLETON
+            Pole mypole = Pole.getInstance();
+            //Указатель на насекомых которые расположены в поле
+            Nasekomoe myNas;
+            do {
+                //Проверяем не достигли ли максимального количества муравьёв
+                if(KolMuraviev()<=((Example.N * Example.N)/2)) {
+
+                    for (int i = 0; i < Example.N; i++) {
+                        for (int j = 0; j < Example.N; j++) {
+                            if(mypole.pol[i][j].nas != null) {
+                                myNas = mypole.pol[i][j].getNasekomoe();
+                                myNas.smenasostoania();
+                            }
+                        }
+                    }
+                    frame.repaint();
+                }
+                else
+                {
+                    Example.flashok = false;
+                }
+
+            }
+            while(Example.flashok);
+        }
         public int KolMuraviev(){
 
             //Указатель для доступа к полю, ПОЛЕ это SINGLETON
@@ -97,49 +129,62 @@ public class Main {
             //Цикл проверки сколько муравьёв на поле
             for(int i = 0; i < Example.N; i++)
                 for (int j = 0; j < Example.N; j++)
-                    if ((mypole.pol[i][j].getKlet() == Example.sost.MUR) || (mypole.pol[i][j].getKlet() == Example.sost.MURIZERNO))
+                    if ((mypole.pol[i][j].nas != null) || (mypole.pol[i][j].nas != null))
                         kolmuraviev++;
             return kolmuraviev;
         }
 
 
         public void actionPerformed(ActionEvent event){
-
             //Указатель для доступа к полю, ПОЛЕ это SINGLETON
             Pole mypole = Pole.getInstance();
 
             if(event.getSource() == buttonNachat){
-                //frame.repaint();
-                buttonNachat.setText("ПОЕХАЛИ!");
+
+                Example.flashok = true;
+                buttonNachat.setEnabled(false);
+                buttonStop.setEnabled(true);
+                buttonPlusMuravei.setEnabled(false);
+                buttonPlusEda.setEnabled(false);
             }
             else
-                if(event.getSource() == buttonPlusMuravei){
-                    //Проверяем не достигли ли максимального количества муравьёв
-                    if(KolMuraviev()<=((Example.N * Example.N)/2))
-                    {
-                        //Нужно сгенерировать случайную координату
-                       int sluchkoordinataX = 56;
-                       int sluchkoordinataY = 56;
-
-                        //Нужно сделать цикл проверки клеток на наличие муравья
-                       if((mypole.pol[sluchkoordinataX][sluchkoordinataY].getKlet() != Example.sost.MUR) && (mypole.pol[sluchkoordinataX][sluchkoordinataY].getKlet() != Example.sost.MURIZERNO))
-                       {
-                           mypole.pol[sluchkoordinataX][sluchkoordinataY].nas = new Muravei();
-                           //Если есть еще и зерно
-                           mypole.pol[sluchkoordinataX][sluchkoordinataY].setKlet(Example.sost.MUR);
-
-                       }
-                    }
+                if(event.getSource() == buttonStop){
+                    Example.flashok = false;
+                    buttonNachat.setEnabled(true);
+                    buttonStop.setEnabled(false);
+                    buttonPlusMuravei.setEnabled(true);
+                    buttonPlusEda.setEnabled(true);
                 }
-                else
-                    if(event.getSource() == buttonPlusEda){
-
-                    }
                     else
-                        if(event.getSource() == buttonStop){
+                        if(event.getSource() == buttonPlusMuravei){
+                            //Проверяем не достигли ли максимального количества муравьёв
+                            if(KolMuraviev()<=((Example.N * Example.N)/2))
+                            {
+                                //Нужно сгенерировать случайную координату
+                                int sluchkoordinataX;
+                                int sluchkoordinataY;
+                                Random random = new Random();
 
+                                //Цикл генерации случайной координаты
+                                do {
+                                    //Генерирует от 0 до max НЕ включая max, чтобы коорлдината не могла быть 0 прибавим 1
+                                    sluchkoordinataX = random.nextInt(Example.N);
+                                    sluchkoordinataY = random.nextInt(Example.N);
+
+                                    if(mypole.pol[sluchkoordinataX][sluchkoordinataY].nas == null)
+                                    {
+                                        mypole.pol[sluchkoordinataX][sluchkoordinataY].nas = new Muravei(sluchkoordinataX,sluchkoordinataY);
+                                        break;
+                                    }
+
+                                } while (true);
+                            }
+                            frame.repaint();
                         }
+                        else
+                            if(event.getSource() == buttonPlusEda) {
 
+                            }
         }
 
     }
@@ -162,6 +207,8 @@ class MyDrawPanel extends JPanel{
         //Вычисляем ширину и высоту клетки
         int Width = this.getWidth();    //Вычисляем ширину панели
         int Height = this.getHeight();  //Вычисляем высоту панели
+        int OtstupWidth = (Width % Example.N)/2;
+        int OtstupHeight = (Height % Example.N)/2;
         int shirinakletki = Width / Example.N;
         int visotakletki  = Height  / Example.N;
 
@@ -169,33 +216,25 @@ class MyDrawPanel extends JPanel{
         int X;
         int Y;
 
+        //Заливаем сразу все поле коричневым цветом чтобы муравьи не рисовались в упор к стенке.
+        g.fillRect(0,0,Width,Height);
+        
         //Цикл прорисовки поля по клеткам
         for(int i = 0; i < Example.N; i++) {
             for(int j = 0; j < Example.N; j++) {
 
-                if (mypole.pol[i][j].getKlet() == Example.sost.MUR) {
-                    g.setColor(mycolor2);
-
-                    X = i*shirinakletki;
-                    Y = j*visotakletki;
-
-                    g.fillRect(X,Y,X+shirinakletki,Y+visotakletki);
-
-                    g.setColor(mycolor1);
+                if (mypole.pol[i][j].nas != null) {
+                    mypole.pol[i][j].nas.risovanie(g,shirinakletki,visotakletki,OtstupWidth,OtstupHeight);
                 }
                 else
-                    if(mypole.pol[i][j].getKlet() == Example.sost.ZERNO) {
+                    if(mypole.pol[i][j].ed != null) {
 
                     }
-                    else
-                        if(mypole.pol[i][j].getKlet() == Example.sost.MURIZERNO){
-
-                        }
-                        else {
-                            X = i * shirinakletki;
-                            Y = j * visotakletki;
+                    else{
+                            g.setColor(mycolor1);
+                            X = i * shirinakletki + OtstupWidth;
+                            Y = j * visotakletki + OtstupHeight;
                             g.fillRect(X, Y, X + shirinakletki, Y + visotakletki);
-
                         }
             }
         }

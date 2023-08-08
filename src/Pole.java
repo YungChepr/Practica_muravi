@@ -18,7 +18,6 @@ public class Pole {
     public void chistka() {
         for (int i = 0; i < Example.N; i++) {
             for (int j = 0; j < Example.N; j++) {
-                pol[i][j].setKlet(Example.sost.PUST);
                 pol[i][j].nas = null; //Освобождать память под объект не нужно, это сделает сборщик мусора
                 pol[i][j].ed = null;  //Освобождать память под объект не нужно, это сделает сборщик мусора
                 pol[i][j].setKoordinataX(i);

@@ -3,20 +3,23 @@ import java.awt.*;
 public class Nasekomoe {
     kletka kletk;
     String name;
-    public Nasekomoe(){
+    public Nasekomoe(int koorX, int koorY){
         kletk = new kletka();
+        kletk.setKoordinataX(koorX);
+        kletk.setKoordinataY(koorY);
         name = "";
     }
-    public void smenasostoania(int X,int Y){
+    public int smenasostoania(){
         //Указатель для доступа к полю
         Pole mypole = Pole.getInstance();
         //Pole.pol[X][Y].setKlet();
 
-
+        return 0;
     }
-    public void risovanie(Graphics g, int shirinakletki, int visotakletki){
+    public void risovanie(Graphics g, int shirinakletki, int visotakletki,int otstupX, int otstupY){
 
-        g.fillRect(kletk.getKoordinataX(),kletk.koordinataY,shirinakletki,visotakletki);
+
+        //g.fillRect(kletk.getKoordinataX(),kletk.koordinataY,shirinakletki,visotakletki);
 
     }
 }

@@ -2,17 +2,20 @@ import java.awt.*;
 
 public class Muravei extends Nasekomoe{
     Color myraveycolor = new Color(0,255,0);
-    public Muravei(){
+    public Muravei(int koordinX, int koordinY){
+        super(koordinX,koordinY);
+    }
+    @Override
+    public void risovanie(Graphics g, int shirinakletki, int visotakletki,int otstupX, int otstupY){
+
+        int X = kletk.getKoordinataX()*shirinakletki + otstupX;
+        int Y = kletk.getKoordinataY()*visotakletki + otstupY;
+        g.setColor(myraveycolor);
+        g.fillRect(X,Y,shirinakletki,visotakletki);
 
     }
     @Override
-    public void risovanie(Graphics g, int shirinakletki, int visotakletki){
-
-        g.setColor(myraveycolor);
-        g.fillRect(kletk.getKoordinataX(),kletk.koordinataY,shirinakletki,visotakletki);
-
-    }
-    public int dvishenie(){
+    public int smenasostoania(){
         int koordinata;
 
         int napr = (int)(Math.random() * 4);
