@@ -2,25 +2,91 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Main {
     public static void main(String[] args) {
-        Panel1 gui = new Panel1();
-        gui.setap();
-        gui.go();
+        //Gui отвечает за графическую соствляющую
+        Gui guiobject = new Gui();
+        guiobject.setup();
+        //Таймер осуществляет цикл
+        TimerListener taimer = new TimerListener();
+        Timer timer = new Timer(100, taimer);
+        timer.start();
     }
 }
 
-     class Panel1 implements ActionListener{
+    //Класс обработчика событий для таймера
+    class TimerListener implements ActionListener
+    {
+        //Метод считает количество муравьёв
+
+        public void actionPerformed(ActionEvent evt)
+        {
+            //Указатель для доступа к полю, ПОЛЕ это SINGLETON
+            Pole mypole = Pole.getInstance();
+            //Указатель на насекомых которые расположены в поле
+            Nasekomoe myNas;
+            int novkoordinata;
+
+            //Проверяем установлен ли флажок начать бесконечный цикл
+            if(Example.flashok == true) {
+                //Проверяем не достигли ли максимального количества муравьёв
+                if (Example.KolMuraviev() <= ((Example.N * Example.N) / 2)) {
+                    for (int i = 0; i < Example.N; i++) {
+                        for (int j = 0; j < Example.N; j++) {
+                            if (mypole.pol[i][j].nas != null) {
+                                myNas = mypole.pol[i][j].getNasekomoe();
+                                novkoordinata = myNas.smenasostoania();
+                                //mypole.pol[i][j].nas = null;
+                                mypole.pol[i][j].setNasekomoe(null);
+                                mypole.pol[i][j].flagpererisovki = true;
+
+                                if (novkoordinata == 0) {
+                                    //koordinata = kletk.getKoordinataX()+1;
+                                    mypole.pol[i + 1][j].setNasekomoe(myNas);
+                                    mypole.pol[i + 1][j].flagpererisovki = true;
+                                }
+                                if (novkoordinata == 1) {
+                                    //koordinata = kletk.getKoordinataY()+1;
+                                    mypole.pol[i][j + 1].setNasekomoe(myNas);
+                                    mypole.pol[i][j + 1].flagpererisovki = true;
+                                }
+                                if (novkoordinata == 2) {
+                                    //koordinata = kletk.getKoordinataX()-1;
+                                    mypole.pol[i - 1][j].setNasekomoe(myNas);
+                                    mypole.pol[i - 1][j].flagpererisovki = true;
+                                }
+                                if (novkoordinata == 3) {
+                                    //koordinata = kletk.getKoordinataY()-1;
+                                    mypole.pol[i][j - 1].setNasekomoe(myNas);
+                                    mypole.pol[i][j - 1].flagpererisovki = true;
+                                }
+                            }
+                        }
+                    }
+                    Example.frame.repaint();
+                } else {
+                    Example.flashok = false;
+                }
+            }
+        }
+    };
+
+     class Gui implements ActionListener{
+
         JButton buttonPlusEda;
         JButton buttonPlusMuravei;
         JButton buttonNachat;
         JButton buttonStop;
-        JFrame frame;
-        public void setap() {
-        //СОЗДАЮТСЯ ВИЗУАЛЬНЫЕ КОМПОНЕНТЫ
+
+
+         //СОЗДАЮТСЯ ВИЗУАЛЬНЫЕ КОМПОНЕНТЫ
+        public void setup() {
             //Создаём фрейм и панели
-            frame = new JFrame();
+            Example.frame = new JFrame();
             MyDrawPanel mypanel = new MyDrawPanel();
             //JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -44,6 +110,8 @@ public class Main {
             buttonNachat.addActionListener(this);
             buttonStop.addActionListener(this);
             buttonStop.setEnabled(false);
+
+
 
             //Создаём тектовые поля
             JTextField textfield1 = new JTextField(3);
@@ -70,17 +138,16 @@ public class Main {
             panel5.add(panel4);
 
             //Добавляем панели на фрейм
-            frame.getContentPane().add(BorderLayout.WEST, panel2);
-            frame.getContentPane().add(BorderLayout.EAST, panel5);
-            frame.getContentPane().add(BorderLayout.CENTER, mypanel);
+            Example.frame.getContentPane().add(BorderLayout.WEST, panel2);
+            Example.frame.getContentPane().add(BorderLayout.EAST, panel5);
+            Example.frame.getContentPane().add(BorderLayout.CENTER, mypanel);
 
 
 
             //Устанавливаем размер фрейма делаем его видимым и завершаем работу программы при закрытии окна
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            frame.setVisible(true);
-
+            Example.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            Example.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            Example.frame.setVisible(true);
 
 
         //СОЗДАЮТСЯ ОБЪЕКТЫ ПРОГРАММЫ
@@ -90,35 +157,8 @@ public class Main {
 
         //НАЧАЛО ЭВОЛЮЦИОННОГО ЦИКЛА
 
+
         //КОНЕЦ ЭВОЛЮЦИОННОГО ЦИКЛА
-        }
-
-        public void go(){
-            //Указатель для доступа к полю, ПОЛЕ это SINGLETON
-            Pole mypole = Pole.getInstance();
-            //Указатель на насекомых которые расположены в поле
-            Nasekomoe myNas;
-            do {
-                //Проверяем не достигли ли максимального количества муравьёв
-                if(KolMuraviev()<=((Example.N * Example.N)/2)) {
-
-                    for (int i = 0; i < Example.N; i++) {
-                        for (int j = 0; j < Example.N; j++) {
-                            if(mypole.pol[i][j].nas != null) {
-                                myNas = mypole.pol[i][j].getNasekomoe();
-                                myNas.smenasostoania();
-                            }
-                        }
-                    }
-                    frame.repaint();
-                }
-                else
-                {
-                    Example.flashok = false;
-                }
-
-            }
-            while(Example.flashok);
         }
         public int KolMuraviev(){
 
@@ -158,7 +198,7 @@ public class Main {
                     else
                         if(event.getSource() == buttonPlusMuravei){
                             //Проверяем не достигли ли максимального количества муравьёв
-                            if(KolMuraviev()<=((Example.N * Example.N)/2))
+                            if(Example.KolMuraviev()<=((Example.N * Example.N)/2))
                             {
                                 //Нужно сгенерировать случайную координату
                                 int sluchkoordinataX;
@@ -174,12 +214,13 @@ public class Main {
                                     if(mypole.pol[sluchkoordinataX][sluchkoordinataY].nas == null)
                                     {
                                         mypole.pol[sluchkoordinataX][sluchkoordinataY].nas = new Muravei(sluchkoordinataX,sluchkoordinataY);
+                                        mypole.pol[sluchkoordinataX][sluchkoordinataY].flagpererisovki = true;
                                         break;
                                     }
 
                                 } while (true);
                             }
-                            frame.repaint();
+                            Example.frame.repaint();
                         }
                         else
                             if(event.getSource() == buttonPlusEda) {
@@ -222,23 +263,23 @@ class MyDrawPanel extends JPanel{
         //Цикл прорисовки поля по клеткам
         for(int i = 0; i < Example.N; i++) {
             for(int j = 0; j < Example.N; j++) {
-
-                if (mypole.pol[i][j].nas != null) {
-                    mypole.pol[i][j].nas.risovanie(g,shirinakletki,visotakletki,OtstupWidth,OtstupHeight);
-                }
-                else
-                    if(mypole.pol[i][j].ed != null) {
-
+                if(mypole.pol[i][j].flagpererisovki == true){
+                    if (mypole.pol[i][j].nas != null) {
+                        mypole.pol[i][j].nas.risovanie(g,shirinakletki,visotakletki,OtstupWidth,OtstupHeight);
                     }
-                    else{
-                            g.setColor(mycolor1);
-                            X = i * shirinakletki + OtstupWidth;
-                            Y = j * visotakletki + OtstupHeight;
-                            g.fillRect(X, Y, X + shirinakletki, Y + visotakletki);
+                    else
+                        if(mypole.pol[i][j].ed != null) {
+
                         }
+                        else{
+                                g.setColor(mycolor1);
+                                X = i * shirinakletki + OtstupWidth;
+                                Y = j * visotakletki + OtstupHeight;
+                                g.fillRect(X, Y, X + shirinakletki, Y + visotakletki);
+                            }
+                    //mypole.pol[i][j].flagpererisovki = false;
+                }
             }
         }
-        //Dimension size = this.getSize();
-
     }
 }
