@@ -9,12 +9,10 @@ public class Nasekomoe {
         kletk.setKoordinataY(koorY);
         name = "";
     }
-    public int smenasostoania(){
+    public void smenasostoania(){
         //Указатель для доступа к полю
         Pole mypole = Pole.getInstance();
         //Pole.pol[X][Y].setKlet();
-
-        return 0;
     }
     public void risovanie(Graphics g, int shirinakletki, int visotakletki,int otstupX, int otstupY){
 

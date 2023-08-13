@@ -29,7 +29,7 @@ public class Main {
             Pole mypole = Pole.getInstance();
             //Указатель на насекомых которые расположены в поле
             Nasekomoe myNas;
-            int novkoordinata;
+            int nov;
 
             //Проверяем установлен ли флажок начать бесконечный цикл
             if(Example.flashok == true) {
@@ -38,32 +38,8 @@ public class Main {
                     for (int i = 0; i < Example.N; i++) {
                         for (int j = 0; j < Example.N; j++) {
                             if (mypole.pol[i][j].nas != null) {
-                                myNas = mypole.pol[i][j].getNasekomoe();
-                                novkoordinata = myNas.smenasostoania();
-                                //mypole.pol[i][j].nas = null;
-                                mypole.pol[i][j].setNasekomoe(null);
-                                mypole.pol[i][j].flagpererisovki = true;
-
-                                if (novkoordinata == 0) {
-                                    //koordinata = kletk.getKoordinataX()+1;
-                                    mypole.pol[i + 1][j].setNasekomoe(myNas);
-                                    mypole.pol[i + 1][j].flagpererisovki = true;
-                                }
-                                if (novkoordinata == 1) {
-                                    //koordinata = kletk.getKoordinataY()+1;
-                                    mypole.pol[i][j + 1].setNasekomoe(myNas);
-                                    mypole.pol[i][j + 1].flagpererisovki = true;
-                                }
-                                if (novkoordinata == 2) {
-                                    //koordinata = kletk.getKoordinataX()-1;
-                                    mypole.pol[i - 1][j].setNasekomoe(myNas);
-                                    mypole.pol[i - 1][j].flagpererisovki = true;
-                                }
-                                if (novkoordinata == 3) {
-                                    //koordinata = kletk.getKoordinataY()-1;
-                                    mypole.pol[i][j - 1].setNasekomoe(myNas);
-                                    mypole.pol[i][j - 1].flagpererisovki = true;
-                                }
+                                //Сообщение насекомому
+                                mypole.pol[i][j].nas.smenasostoania();
                             }
                         }
                     }
