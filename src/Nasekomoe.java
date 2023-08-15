@@ -2,22 +2,19 @@ import java.awt.*;
 
 public class Nasekomoe {
     kletka kletk;
-    String name;
+    Example.Napravlenie napravlenie; //Переменная содержит направление движения на поле
+    boolean tronuto; //Переменная содержит параметр двигалось ли насекомое в этот ход или нет
     public Nasekomoe(int koorX, int koorY){
         kletk = new kletka();
         kletk.setKoordinataX(koorX);
         kletk.setKoordinataY(koorY);
-        name = "";
+        napravlenie = Example.Napravlenie.STAY;
+        tronuto = false;
     }
     public void smenasostoania(){
-        //Указатель для доступа к полю
-        Pole mypole = Pole.getInstance();
-        //Pole.pol[X][Y].setKlet();
+        //Переопределён в наследнике
     }
     public void risovanie(Graphics g, int shirinakletki, int visotakletki,int otstupX, int otstupY){
-
-
-        //g.fillRect(kletk.getKoordinataX(),kletk.koordinataY,shirinakletki,visotakletki);
-
+        //Переопределён в наследнике
     }
 }

@@ -13,7 +13,7 @@ public class Main {
         guiobject.setup();
         //Таймер осуществляет цикл
         TimerListener taimer = new TimerListener();
-        Timer timer = new Timer(100, taimer);
+        Timer timer = new Timer(Example.Tact, taimer);
         timer.start();
     }
 }
@@ -39,10 +39,19 @@ public class Main {
                         for (int j = 0; j < Example.N; j++) {
                             if (mypole.pol[i][j].nas != null) {
                                 //Сообщение насекомому
-                                mypole.pol[i][j].nas.smenasostoania();
+                                if(mypole.pol[i][j].nas.tronuto == false) {
+                                    mypole.pol[i][j].nas.smenasostoania();
+                                }
                             }
                         }
                     }
+                    for (int i = 0; i < Example.N; i++) {
+                        for (int j = 0; j < Example.N; j++) {
+                                if (mypole.pol[i][j].nas != null) {
+                                    mypole.pol[i][j].nas.tronuto = false;
+                                }
+                            }
+                        }
                     Example.frame.repaint();
                 } else {
                     Example.flashok = false;
@@ -57,6 +66,7 @@ public class Main {
         JButton buttonPlusMuravei;
         JButton buttonNachat;
         JButton buttonStop;
+
 
 
          //СОЗДАЮТСЯ ВИЗУАЛЬНЫЕ КОМПОНЕНТЫ
@@ -90,12 +100,12 @@ public class Main {
 
 
             //Создаём тектовые поля
-            JTextField textfield1 = new JTextField(3);
-            JTextField textfield2 = new JTextField(3);
+            Example.textfield1 = new JTextField(3);
+            Example.textfield2 = new JTextField(3);
             JLabel text1 = new JLabel();
             JLabel text2 = new JLabel();
-            textfield1.setText(" 0");
-            textfield2.setText(" 0");
+            Example.textfield1.setText(" 0");
+            Example.textfield2.setText(" 0");
             text1.setText("Кол-во еды:");
             text2.setText("Кол-во муравьев:");
 
@@ -107,9 +117,9 @@ public class Main {
 
             //Добавляем тектовые поля на 3 и 4 панель
             panel3.add(text1);
-            panel3.add(textfield1);
+            panel3.add(Example.textfield1);
             panel4.add(text2);
-            panel4.add(textfield2);
+            panel4.add(Example.textfield2);
             panel5.add(panel3);
             panel5.add(panel4);
 
@@ -136,24 +146,14 @@ public class Main {
 
         //КОНЕЦ ЭВОЛЮЦИОННОГО ЦИКЛА
         }
-        public int KolMuraviev(){
-
-            //Указатель для доступа к полю, ПОЛЕ это SINGLETON
-            Pole mypole = Pole.getInstance();
-            int kolmuraviev = 0;
-
-            //Цикл проверки сколько муравьёв на поле
-            for(int i = 0; i < Example.N; i++)
-                for (int j = 0; j < Example.N; j++)
-                    if ((mypole.pol[i][j].nas != null) || (mypole.pol[i][j].nas != null))
-                        kolmuraviev++;
-            return kolmuraviev;
-        }
-
 
         public void actionPerformed(ActionEvent event){
             //Указатель для доступа к полю, ПОЛЕ это SINGLETON
             Pole mypole = Pole.getInstance();
+            //Переменные для генерации координаты
+            int sluchkoordinataX;
+            int sluchkoordinataY;
+            int chetchik = 0;
 
             if(event.getSource() == buttonNachat){
 
@@ -177,29 +177,54 @@ public class Main {
                             if(Example.KolMuraviev()<=((Example.N * Example.N)/2))
                             {
                                 //Нужно сгенерировать случайную координату
-                                int sluchkoordinataX;
-                                int sluchkoordinataY;
                                 Random random = new Random();
 
                                 //Цикл генерации случайной координаты
+                                chetchik = 0;
                                 do {
                                     //Генерирует от 0 до max НЕ включая max, чтобы коорлдината не могла быть 0 прибавим 1
                                     sluchkoordinataX = random.nextInt(Example.N);
                                     sluchkoordinataY = random.nextInt(Example.N);
 
-                                    if(mypole.pol[sluchkoordinataX][sluchkoordinataY].nas == null)
+                                    if((mypole.pol[sluchkoordinataX][sluchkoordinataY].nas == null) && (mypole.pol[sluchkoordinataX][sluchkoordinataY].ed == null))
                                     {
                                         mypole.pol[sluchkoordinataX][sluchkoordinataY].nas = new Muravei(sluchkoordinataX,sluchkoordinataY);
                                         mypole.pol[sluchkoordinataX][sluchkoordinataY].flagpererisovki = true;
                                         break;
                                     }
-
+                                    chetchik++;
+                                    if(chetchik > 100) break;
                                 } while (true);
                             }
                             Example.frame.repaint();
                         }
                         else
                             if(event.getSource() == buttonPlusEda) {
+                                //Проверяем не достигли ли максимального количества еды
+                                if(Example.KolEdi()<=((Example.N * Example.N)/2))
+                                {
+                                    //Нужно сгенерировать случайную координату
+                                    Random random = new Random();
+
+                                    //Цикл генерации случайной координаты
+                                    chetchik = 0;
+                                    do {
+                                        //Генерирует от 0 до max НЕ включая max, чтобы коорлдината не могла быть 0 прибавим 1
+                                        sluchkoordinataX = random.nextInt(Example.N);
+                                        sluchkoordinataY = random.nextInt(Example.N);
+
+                                        if((mypole.pol[sluchkoordinataX][sluchkoordinataY].ed == null) && (mypole.pol[sluchkoordinataX][sluchkoordinataY].nas == null))
+                                        {
+                                            mypole.pol[sluchkoordinataX][sluchkoordinataY].ed = new Eda(sluchkoordinataX,sluchkoordinataY);
+                                            mypole.pol[sluchkoordinataX][sluchkoordinataY].flagpererisovki = true;
+                                            break;
+                                        }
+                                        chetchik++;
+                                        if(chetchik > 100) break;
+
+                                    } while (true);
+                                }
+                                Example.frame.repaint();
 
                             }
         }
@@ -243,19 +268,23 @@ class MyDrawPanel extends JPanel{
                     if (mypole.pol[i][j].nas != null) {
                         mypole.pol[i][j].nas.risovanie(g,shirinakletki,visotakletki,OtstupWidth,OtstupHeight);
                     }
-                    else
-                        if(mypole.pol[i][j].ed != null) {
-
+                    else {
+                        if (mypole.pol[i][j].ed != null) {
+                            mypole.pol[i][j].ed.risovanie(g, shirinakletki, visotakletki, OtstupWidth, OtstupHeight);
+                        } else {
+                            g.setColor(mycolor1);
+                            X = i * shirinakletki + OtstupWidth;
+                            Y = j * visotakletki + OtstupHeight;
+                            g.fillRect(X, Y, X + shirinakletki, Y + visotakletki);
                         }
-                        else{
-                                g.setColor(mycolor1);
-                                X = i * shirinakletki + OtstupWidth;
-                                Y = j * visotakletki + OtstupHeight;
-                                g.fillRect(X, Y, X + shirinakletki, Y + visotakletki);
-                            }
-                    //mypole.pol[i][j].flagpererisovki = false;
+                    }
                 }
             }
         }
+
+        //Меняем количество еды и муравьев в текстовых полях
+        Example.textfield1.setText(Integer.toString(Example.KolEdi()));
+        Example.textfield2.setText(Integer.toString(Example.KolMuraviev()));
+
     }
 }

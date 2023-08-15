@@ -16,7 +16,7 @@ public class kletka extends koordinata {
     public Nasekomoe getNasekomoe() {
         return nas;
     }
-    public void setEda(Eda nas) {
+    public void setEda(Eda ed) {
         this.ed = ed;
     }
     public Eda getEda() {
