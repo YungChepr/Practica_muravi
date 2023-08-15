@@ -21,8 +21,7 @@ public class Main {
     //Класс обработчика событий для таймера
     class TimerListener implements ActionListener
     {
-        //Метод считает количество муравьёв
-
+        //НАЧАЛО ЭВОЛЮЦИОННОГО ЦИКЛА
         public void actionPerformed(ActionEvent evt)
         {
             //Указатель для доступа к полю, ПОЛЕ это SINGLETON
@@ -38,7 +37,7 @@ public class Main {
                     for (int i = 0; i < Example.N; i++) {
                         for (int j = 0; j < Example.N; j++) {
                             if (mypole.pol[i][j].nas != null) {
-                                //Сообщение насекомому
+                                //Сообщение насекомому если его в этот ход не трогали
                                 if(mypole.pol[i][j].nas.tronuto == false) {
                                     mypole.pol[i][j].nas.smenasostoania();
                                 }
@@ -58,23 +57,23 @@ public class Main {
                 }
             }
         }
+        //КОНЕЦ ЭВОЛЮЦИОННОГО ЦИКЛА
     };
 
      class Gui implements ActionListener{
-
+         //СОЗДАЮТСЯ УКАЗАТЕЛИ НА ВИЗУАЛЬНЫЕ КОМПОНЕНТЫ
         JButton buttonPlusEda;
         JButton buttonPlusMuravei;
+        JButton buttonPlusTsaritsa;
         JButton buttonNachat;
         JButton buttonStop;
-
-
 
          //СОЗДАЮТСЯ ВИЗУАЛЬНЫЕ КОМПОНЕНТЫ
         public void setup() {
             //Создаём фрейм и панели
             Example.frame = new JFrame();
             MyDrawPanel mypanel = new MyDrawPanel();
-            //JPanel panel1 = new JPanel();
+            JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
             JPanel panel3 = new JPanel();
             JPanel panel4 = new JPanel();
@@ -87,64 +86,59 @@ public class Main {
             //Создаём кнопки
             buttonPlusEda = new JButton("+ ЕДА");
             buttonPlusMuravei = new JButton("+ МУРАВЕЙ");
+            buttonPlusTsaritsa = new JButton("+ ЦАРИЦА");
             buttonNachat = new JButton("СТАРТ");
             buttonStop = new JButton("ПАУЗА");
 
             //Создаю обработчики событий для кнопок
             buttonPlusEda.addActionListener(this);
             buttonPlusMuravei.addActionListener(this);
+            buttonPlusTsaritsa.addActionListener(this);
             buttonNachat.addActionListener(this);
             buttonStop.addActionListener(this);
             buttonStop.setEnabled(false);
 
-
-
             //Создаём тектовые поля
             Example.textfield1 = new JTextField(3);
             Example.textfield2 = new JTextField(3);
+            Example.textfield3 = new JTextField(3);
             JLabel text1 = new JLabel();
             JLabel text2 = new JLabel();
+            JLabel text3 = new JLabel();
             Example.textfield1.setText(" 0");
             Example.textfield2.setText(" 0");
+            Example.textfield3.setText(" 0");
             text1.setText("Кол-во еды:");
             text2.setText("Кол-во муравьев:");
+            text3.setText("Кол-во цариц:");
 
             //Добавляем кнопки на вторую панель
             panel2.add(buttonPlusEda);
             panel2.add(buttonPlusMuravei);
+            panel2.add(buttonPlusTsaritsa);
             panel2.add(buttonNachat);
             panel2.add(buttonStop);
 
-            //Добавляем тектовые поля на 3 и 4 панель
+            //Добавляем тектовые поля на 3,4 и 1  панель
             panel3.add(text1);
             panel3.add(Example.textfield1);
             panel4.add(text2);
             panel4.add(Example.textfield2);
+            panel1.add(text3);
+            panel1.add(Example.textfield3);
             panel5.add(panel3);
             panel5.add(panel4);
+            panel5.add(panel1);
 
             //Добавляем панели на фрейм
             Example.frame.getContentPane().add(BorderLayout.WEST, panel2);
             Example.frame.getContentPane().add(BorderLayout.EAST, panel5);
             Example.frame.getContentPane().add(BorderLayout.CENTER, mypanel);
 
-
-
             //Устанавливаем размер фрейма делаем его видимым и завершаем работу программы при закрытии окна
             Example.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             Example.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             Example.frame.setVisible(true);
-
-
-        //СОЗДАЮТСЯ ОБЪЕКТЫ ПРОГРАММЫ
-            //Указатель для доступа к полю, ПОЛЕ это SINGLETON
-            Pole mypole = Pole.getInstance();
-
-
-        //НАЧАЛО ЭВОЛЮЦИОННОГО ЦИКЛА
-
-
-        //КОНЕЦ ЭВОЛЮЦИОННОГО ЦИКЛА
         }
 
         public void actionPerformed(ActionEvent event){
@@ -162,6 +156,7 @@ public class Main {
                 buttonStop.setEnabled(true);
                 buttonPlusMuravei.setEnabled(false);
                 buttonPlusEda.setEnabled(false);
+                buttonPlusTsaritsa.setEnabled(false);
             }
             else
                 if(event.getSource() == buttonStop){
@@ -170,6 +165,7 @@ public class Main {
                     buttonStop.setEnabled(false);
                     buttonPlusMuravei.setEnabled(true);
                     buttonPlusEda.setEnabled(true);
+                    buttonPlusTsaritsa.setEnabled(true);
                 }
                     else
                         if(event.getSource() == buttonPlusMuravei){
@@ -225,8 +221,34 @@ public class Main {
                                     } while (true);
                                 }
                                 Example.frame.repaint();
-
                             }
+                            else
+                                if(event.getSource() == buttonPlusTsaritsa) {
+                                    //Проверяем не достигли ли максимального количества муравьёв
+                                    if(Example.KolMuraviev()<=((Example.N * Example.N)/2))
+                                    {
+                                        //Нужно сгенерировать случайную координату
+                                        Random random = new Random();
+
+                                        //Цикл генерации случайной координаты
+                                        chetchik = 0;
+                                        do {
+                                            //Генерирует от 0 до max НЕ включая max, чтобы коорлдината не могла быть 0 прибавим 1
+                                            sluchkoordinataX = random.nextInt(Example.N);
+                                            sluchkoordinataY = random.nextInt(Example.N);
+
+                                            if((mypole.pol[sluchkoordinataX][sluchkoordinataY].nas == null) && (mypole.pol[sluchkoordinataX][sluchkoordinataY].ed == null))
+                                            {
+                                                mypole.pol[sluchkoordinataX][sluchkoordinataY].nas = new Tsaritsa(sluchkoordinataX,sluchkoordinataY);
+                                                mypole.pol[sluchkoordinataX][sluchkoordinataY].flagpererisovki = true;
+                                                break;
+                                            }
+                                            chetchik++;
+                                            if(chetchik > 100) break;
+                                        } while (true);
+                                    }
+                                    Example.frame.repaint();
+                                }
         }
 
     }
@@ -285,6 +307,7 @@ class MyDrawPanel extends JPanel{
         //Меняем количество еды и муравьев в текстовых полях
         Example.textfield1.setText(Integer.toString(Example.KolEdi()));
         Example.textfield2.setText(Integer.toString(Example.KolMuraviev()));
+        Example.textfield3.setText(Integer.toString(Example.KolTsarits()));
 
     }
 }

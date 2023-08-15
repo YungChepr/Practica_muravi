@@ -13,6 +13,7 @@ public class Example {
     public static JFrame frame;
     public static JTextField textfield1;
     public static JTextField textfield2;
+    public static JTextField textfield3;
 
     //Метод считает количество муравьев на поле
     public static int KolMuraviev(){
@@ -24,7 +25,7 @@ public class Example {
         //Цикл проверки сколько муравьёв на поле
         for(int i = 0; i < Example.N; i++)
             for (int j = 0; j < Example.N; j++)
-                if ((mypole.pol[i][j].nas != null) || (mypole.pol[i][j].nas != null))
+                if (mypole.pol[i][j].nas != null)
                     kolmuraviev++;
         return kolmuraviev;
     }
@@ -39,9 +40,25 @@ public class Example {
         //Цикл проверки сколько еды на поле
         for(int i = 0; i < Example.N; i++)
             for (int j = 0; j < Example.N; j++)
-                if ((mypole.pol[i][j].ed != null) || (mypole.pol[i][j].ed != null))
+                if (mypole.pol[i][j].ed != null)
                     koledi++;
         return koledi;
+    }
+
+    //Метод считает количество цариц на поле
+    public static int KolTsarits() {
+
+        //Указатель для доступа к полю, ПОЛЕ это SINGLETON
+        Pole mypole = Pole.getInstance();
+        int koltsarits = 0;
+
+        //Цикл проверки сколько муравьёв на поле
+        for (int i = 0; i < Example.N; i++)
+            for (int j = 0; j < Example.N; j++)
+                if (mypole.pol[i][j].nas != null)
+                    if (mypole.pol[i][j].nas instanceof Tsaritsa)
+                        koltsarits++;
+        return koltsarits;
     }
 
     //Перечисление содержит варианты направления

@@ -243,21 +243,6 @@ public class Muravei extends Nasekomoe{
                 }
             }
 
-            /*if((VspKoorY-1) >=0){
-                if(mypole.pol[VspKoorX][VspKoorY-1].ed != null){
-                    //Муравей ест еду 10 тактов
-                    if(vremyapoedanie>10) {
-                        vremyapoedanie = 0;
-                        mypole.pol[VspKoorX][VspKoorY-1].setEda(null);
-                        mypole.pol[VspKoorX][VspKoorY-1].flagpererisovki = true;
-                    }
-                    else {
-                        napravlenie = Example.Napravlenie.STAY;
-                        vremyapoedanie++;
-                    }
-                }
-            } */
-
             if(vremyapoedanie == 0) {
 
                 //Каждый такт муравей теряет жизненную силу
