@@ -2,8 +2,8 @@ import javax.swing.*;
 
 //Класс для хранения злужебных переменных
 public class Example {
-    public static  int N = 20; //Размерность поля
-    public static  int Tact = 100; //Время такта в милисекундах
+    public static  int N = 30; //Размерность поля
+    public static  int Tact = 10; //Время такта в милисекундах
     public static  int LifePower = 5 * N; //Жизненная сила муравья в тактах
     public static  int MaxLifePower = 10 * N; //Максимальная жизненная сила
     public static  int MinLifePower = N/2; //Минимальная жизненная сила

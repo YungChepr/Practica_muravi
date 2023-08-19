@@ -37,7 +37,7 @@ public class Tsaritsa extends Muravei{
             //Если рядом есть свободные поля пробуем ставить муравья на них
             if ((VspKoorX + 1) < Example.N) {
                 if ((mypole.pol[VspKoorX + 1][VspKoorY].nas == null) && (mypole.pol[VspKoorX + 1][VspKoorY].ed == null)) {
-                    mypole.pol[VspKoorX + 1][VspKoorY].nas = new Muravei(VspKoorX + 1, VspKoorY);
+                    mypole.pol[VspKoorX + 1][VspKoorY].nas = new Egg(VspKoorX + 1, VspKoorY);
                     mypole.pol[VspKoorX + 1][VspKoorY].flagpererisovki = true;
 
                 }
