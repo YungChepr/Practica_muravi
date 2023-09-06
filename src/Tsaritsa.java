@@ -44,19 +44,19 @@ public class Tsaritsa extends Muravei{
             } else {
                 if((VspKoorY+1)<Example.N) {
                     if ((mypole.pol[VspKoorX][VspKoorY + 1].nas == null) && (mypole.pol[VspKoorX][VspKoorY + 1].ed == null)) {
-                        mypole.pol[VspKoorX][VspKoorY+1].nas = new Muravei(VspKoorX, VspKoorY+1);
+                        mypole.pol[VspKoorX][VspKoorY+1].nas = new Egg(VspKoorX, VspKoorY+1);
                         mypole.pol[VspKoorX][VspKoorY+1].flagpererisovki = true;
                     }
                 } else {
                     if((VspKoorX-1)>=0){
                         if((mypole.pol[VspKoorX-1][VspKoorY].nas == null) && (mypole.pol[VspKoorX-1][VspKoorY].ed == null)) {
-                            mypole.pol[VspKoorX - 1][VspKoorY].nas = new Muravei(VspKoorX - 1, VspKoorY);
+                            mypole.pol[VspKoorX - 1][VspKoorY].nas = new Egg(VspKoorX - 1, VspKoorY);
                             mypole.pol[VspKoorX - 1][VspKoorY].flagpererisovki = true;
                             }
                         } else {
                         if((VspKoorY-1)>=0) {
                             if ((mypole.pol[VspKoorX][VspKoorY - 1].nas == null) && (mypole.pol[VspKoorX][VspKoorY - 1].ed == null)) {
-                                mypole.pol[VspKoorX][VspKoorY-1].nas = new Muravei(VspKoorX, VspKoorY-1);
+                                mypole.pol[VspKoorX][VspKoorY-1].nas = new Egg(VspKoorX, VspKoorY-1);
                                 mypole.pol[VspKoorX][VspKoorY-1].flagpererisovki = true;
                                 }
                             } else {
